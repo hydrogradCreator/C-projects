@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+//pedir o tamanho do vetor
+//pedir o conteudo do vetor
+//calcular a média dos numeros dentro do vetor
+//imprimir o número mais proximo da média
+//usar a diferença entre os numeros para a comparação
+
+void media(double vet[], int n, int *i){
+    vet[n];
+    int media=0;
+    int soma=0; 
+    int menor=0, indice;
+    int absoluto;
+
+    for(int i =0; i< n; i++){
+        scanf("%lf",&vet[i]);
+        soma += vet[i];
+    }
+    absoluto = vet[n-3];
+    media = soma/n;
+
+    for(int j=0; j < n; j++){
+        menor = abs(vet[j] - media);
+
+        if(menor <= absoluto){
+            absoluto = menor;
+            *i = j;
+        }
+    }
+}
+int main(){
+
+    int n, i;
+    scanf("%d",&n);
+    double vet[n];
+    media(vet,n,&i);
+    printf("%d\n",i);
+
+    return EXIT_SUCCESS;
+}

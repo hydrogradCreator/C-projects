@@ -1,0 +1,281 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+//começa por receber o tabuleiro e imprimir
+char tab(char **tab, int tam){
+
+    //funcao que recebe o tabuleiro e imprime
+   
+     for (int i = 0; i < tam; i++){
+        for (int j = 0; j < tam; j++){
+            printf("%c ", tab[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+//funcao que recebe o tabuleiro original, e passa para um tabuleiro temporario
+//todas as modificações nele feitas(movimentações), para um tabuleiro temporario
+//essa função é chamada dentro da função que faz a movimentação em zig zag
+char **aloca_tabuleiro(char **tab, int tam){
+
+
+    char **tab_temp = (char **) malloc(tam*sizeof(char *));
+
+    //aloca as linhas do tabuleiro
+    for(int i =0; i < tam; i++){
+        tab_temp[i] =  (char *) malloc(tam* sizeof(char));
+    }
+
+    //tabuleiro temporario recebe o tabuleiro original
+    for(int i=0 ; i < tam; i++){
+        for(int j= 0; j < tam; j++){
+            tab_temp[i][j] = tab[i][j]; 
+        }
+    }
+    return tab_temp;
+}
+
+
+//funcao que desaloca os tabuleiro temporarios criados dentro da função recursiva
+void desaloca( char **tab_temp, int tam){
+
+
+    for(int i=0; i < tam; i++){
+        free(tab_temp[i]);
+    }
+    free(tab_temp);
+}
+
+int captura(char **tab, int x, int y,int tam){
+
+    //todas essas variaveis recebem valor de cada possibilidade de captura 
+    //em cada uma das 4 possibilidades
+    int soma_direita_baixo=0;
+    int soma_esquerda_baixo=0;
+    int soma_direita_cima=0;
+    int soma_esquerda_cima=0;
+
+    // cima esquerda
+    //------------------------------funcao recursiva--------------------------------
+    if (x-2 >= 0 && y-2 >= 0 ){
+        if(tab[x-2][y-2] == 'o'){
+            if(tab[x-1][y-1] == 'p')
+            {
+                char **tab_temp  =  aloca_tabuleiro(tab, tam);        //essa matriz recebe recebe o tabuleiro original e faz as modificações
+                                                                                        
+                tab_temp[x][y] = 'o';
+                tab_temp[x-1][y-1] = 'o';                           //essas modificações sao feitas dentro do tabuleiro temporario
+                tab_temp[x-2][y-2] = 'b';                           //de tal forma que o tabuleiro original não é modificado
+                                                                    //por que a cada movimentação, é importante se basear no tabuleiro temporario, para não haver movimentos errôneos
+
+                soma_esquerda_cima = 1 + captura(tab_temp, x-2, y-2,tam);   //chamamos a função para verificar se o proximo movimento é valido
+                desaloca(tab_temp, tam);                             //ao desalocar, podemos voltar a analisar o tabuleiro original
+            }
+        }
+    }
+    // cima direita
+    if (x+2 < tam && y-2 >= 0){
+        if(tab[x+2][y-2] == 'o'){
+            if(tab[x+1][y-1] == 'p')
+            {                           
+                char **tab_temp = aloca_tabuleiro(tab, tam);
+                tab_temp[x+1][y-1] = 'o';
+                tab_temp[x][y] = 'o';                     //-----------------fazemos a mesma lógica para todas as possibilidades      
+                tab_temp[x+2][y-2] = 'b';   
+        
+                soma_direita_cima = 1 + captura(tab_temp, x+2, y-2, tam);
+                desaloca(tab_temp, tam);
+            }
+        }
+    }
+    //esquerda baixo
+    if (x+2 < tam && y+2 < tam){
+        if(tab[x+2][y+2] == 'o') {
+
+            if(tab[x+1][y+1] == 'p'){
+                
+                char **tab_temp  = aloca_tabuleiro(tab, tam);
+                tab_temp[x][y] = 'o';
+                tab_temp[x+2][y+2] = 'b';                       //------------------
+                tab_temp[x+1][y+1] = 'o';
+
+                soma_esquerda_baixo = 1 + captura(tab_temp, x+2, y+2,tam);
+                desaloca(tab_temp, tam);
+            }
+        }
+    }
+    // direita baixo
+    if ( x-2 >= 0 && y+2 < tam){
+        if(tab[x-2][y+2] == 'o'){
+            if(tab[x-1][y+1] == 'p'){
+                
+                char **tab_temp = aloca_tabuleiro(tab, tam);
+
+                tab_temp[x][y] = 'o';
+                tab_temp[x-1][y+1] = 'o';                   //-----------------------
+                tab_temp[x-2][y+2] = 'b';
+                
+                soma_direita_baixo = 1 + captura(tab_temp, x-2, y+2,tam);
+                desaloca(tab_temp, tam);
+            }
+        }
+    }
+
+    //no fim, retornamos o maior valor de captura dentre as 4 possibilidades
+    //usaria o fmax da biblioteca math.h, mas, por algum motivo, não estava funcionando
+    //é o algoritmo de forma manual
+    //que compara todos os valores somados na função recursiva
+    if(soma_direita_cima > soma_esquerda_cima){
+        if(soma_direita_baixo > soma_esquerda_baixo){
+            if(soma_direita_cima > soma_direita_baixo){
+                return soma_direita_cima;
+            }
+            else{
+                return soma_direita_baixo;
+            }
+        }
+        else{
+             if(soma_direita_cima > soma_esquerda_baixo){
+                return soma_direita_cima;
+            }
+            else{
+                return soma_esquerda_baixo;
+            }
+        }
+    }
+    else {
+        if(soma_direita_baixo > soma_esquerda_baixo){
+            if(soma_esquerda_cima > soma_direita_baixo){
+                return soma_esquerda_cima;
+            }
+            else{
+                return soma_direita_baixo;
+            }
+        }
+        else{
+            if(soma_esquerda_cima > soma_esquerda_baixo){
+                return soma_esquerda_cima;
+            }
+            else{
+                return soma_esquerda_baixo;
+            }
+        }
+    }
+}
+
+//funcao que percorre o tabuleiro em zigzag e armazena as peças que possuem possibilidade de capturas
+//essa função é chamada dentro do main, e ela printa a posicao de maior captura
+//e todas as peças que capturaram
+void percorre(char **tab,int tam){
+    
+
+    int capturas=0;                                             //inteiro que recebe o valor total de capturas
+    int peca_possibilidade_capturas=0;                          //inteiro que é aumentado todas as vezes que o valor de captura for != 0
+                                                            // servirá também como indice da matriz abaixo
+    int **poss_captura = (int **) malloc (sizeof(int *));
+    poss_captura[0] = (int *) malloc(3*sizeof(int));        //essa matriz receberá um "trio" ordenado: x y e n
+    poss_captura[0][0] = 0;                                 //inicializa cada posição (poderia ser outro número, mas 0 é importante caso não haja nenhuma peça que possa capturar)
+    poss_captura[0][1] = 0;
+    poss_captura[0][2] = 0;
+    
+
+    //se i == numero par: então a linha irá crescer
+    for (int i = 0; i < tam; i++){
+        if(i%2 == 0){
+            for (int j = 0; j < tam; j++){
+                if(tab[i][j] == 'b'){    
+                    capturas = captura(tab, i,j,tam);                                //-------chamar a funcao que analisa se a posicão i j tem possibilidade de captura
+
+                    if(capturas != 0){                                  //------ se sim, ele entra nessa condição e começa a alocar as posiçoes
+                        
+                        peca_possibilidade_capturas++;                  //------- é somado a essa variavel (é o indice da nossa matriz)
+                        poss_captura = (int **) realloc(poss_captura,peca_possibilidade_capturas*sizeof(int *));        //e alocado
+
+                        poss_captura[peca_possibilidade_capturas-1] = (int *) malloc(3*sizeof(int));
+                        poss_captura[peca_possibilidade_capturas-1][0] = i;                     //posição 0 recebe o x
+                        poss_captura[peca_possibilidade_capturas-1][1] = j;                     //posição 1 recebe y
+                        poss_captura[peca_possibilidade_capturas-1][2] = capturas;              //posicao 2 recebe o numero de capturas
+
+                    }                     
+                }
+            }
+        }
+    //se i == impar, a linha irá decrescer
+        if(i%2 != 0){
+            for (int j = tam-1; j >= 0; j--){
+                if(tab[i][j] == 'b'){
+                    capturas = captura(tab, i,j,tam);
+
+                    if(capturas != 0){                                       //------------------- mesma logica acima
+                        
+                        peca_possibilidade_capturas++;
+                        poss_captura = (int **) realloc(poss_captura,peca_possibilidade_capturas*sizeof(int *));
+
+                        poss_captura[peca_possibilidade_capturas-1] = (int *) malloc(3*sizeof(int));
+                        poss_captura[peca_possibilidade_capturas-1][0] = i;
+                        poss_captura[peca_possibilidade_capturas-1][1] = j;
+                        poss_captura[peca_possibilidade_capturas-1][2] = capturas;
+
+                    }
+                }
+            }
+        }
+    }
+    
+    printf("\n");
+
+    //o inteiero maior recebe a primeira posição da matriz e é comparada com as i posições da matriz
+    int maior = poss_captura[0][2];
+    //inteiro que recebe a posicao do maior numero, e é usado como indice na hora do printf
+    int posicao = 0;
+
+    //percorre todo a matriz que recebe os tres números
+    //so vai até o tamanho total de pecas que tem possibilidade de captura
+    for(int i=0; i < peca_possibilidade_capturas; i ++){
+        
+        if(poss_captura[i][2] > maior){
+            maior = poss_captura[i][2];
+            posicao = i;
+        }
+    }
+    //primeiro printar o maior
+    printf("%d %d %d\n", poss_captura[posicao][0], poss_captura[posicao][1],maior);
+
+    //depois todas as restantes
+    for(int i = 0; i < peca_possibilidade_capturas; i++){
+        printf("%d %d %d\n",poss_captura[i][0],poss_captura[i][1],poss_captura[i][2]);
+    }
+}
+
+//funnçao varre a matriz e soma a pontuação de cada peça
+
+int main(){
+
+    //no main, é pedido o tamanho
+    int tam;
+
+    scanf("%d", &tam);
+    //alocamos o tamanho dentro da matriz tabuleiro de acordo com o tamanho digitadod
+    char **tabuleiro =  (char **) malloc(tam*sizeof(char*));
+
+    //alocar as linhas do tabuleiro
+    //fgets armazena o \n 
+    //então, há de ser um tamanho maior que o digitado
+    for (int i = 0; i < tam; i++){
+        tabuleiro[i] = (char *) malloc((tam+2)*sizeof(char));
+    }
+    
+    //limpa o buffer do teclado
+    setbuf(stdin, NULL);
+
+    //pega o tabuleiro
+    for(int i = 0; i < tam ; i++){
+        fgets(tabuleiro[i], tam+2, stdin);
+    }
+    //chamada da funcao que analisa as posições, armazena, e printa na tela os resultados finais.
+    percorre(tabuleiro,tam);
+    
+    //fim do programa
+    return EXIT_SUCCESS;
+}

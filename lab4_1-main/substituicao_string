@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <string.h>
+
+
+int main(){
+
+char str[100];
+char C1;
+char C2;
+
+fgets(str,100,stdin);
+
+C1 = getchar();
+getchar();
+C2 = getchar();
+
+//para ler toda a string, é preciso usar o strlen, para saber o tamanho dela, e conseguir lê-la.
+    for(int i=0; i < (strlen(str));i++ ){
+        if(str[i] == C1){
+            str[i] = C2;
+                printf("%s", str);
+                    break;
+        }
+            else if(str[i] != C2){
+        
+                printf("%s",str);
+            }
+    }
+
+return 0;
+}

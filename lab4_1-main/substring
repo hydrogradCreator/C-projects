@@ -1,0 +1,20 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(){
+    char S1[100];
+    char S2[100];
+
+    fgets(S1,100,stdin);
+    
+    fgets(S2,100,stdin);
+    
+    if(strstr(S1,S2)==NULL){
+        printf("Não é substring.");
+    } else {
+        printf("É substring");
+    }
+    
+    
+    return 0;
+}

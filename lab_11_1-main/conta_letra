@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int conta_letras(char string[], char letra)
+{
+    int tam = strlen(string);
+    
+    if((tam-1) == 0){
+        return 0;
+    }
+    else{
+        if (string[0] == letra){
+            return conta_letras(&string[1], letra) + 1;
+        }else
+            return conta_letras(&string[1], letra);
+    }
+}
+
+
+int main()
+{
+    char palavra[50];
+    char letra;
+
+    //printf("informe a palavra: ");
+    fgets(palavra, 50, stdin);
+    //printf("informe a letra: ");
+    letra = getchar();
+    printf("%d", conta_letras(palavra, letra));
+
+    return EXIT_SUCCESS;
+}

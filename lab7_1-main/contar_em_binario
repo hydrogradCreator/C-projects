@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+int main(){
+
+    char nome[200];
+
+    fgets(nome,200,stdin);
+    nome[strlen(nome)-1] = '\0';
+
+    //printf("O nome é: %s",nome);
+
+    FILE *contador;
+    contador = fopen(nome,"rb");
+
+    int i=0;
+    char linhas[100];
+    int somaA = 0;
+    
+    while(fgets(linhas,100,contador) !=NULL){
+        for(int i=0; i <= strlen(linhas); i++){
+            if(linhas[i]  == 'a'){
+                somaA ++;
+            }
+        }
+    }
+    printf("%d",somaA);
+    fclose(contador);
+
+    return 0;
+}

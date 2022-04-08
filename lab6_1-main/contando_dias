@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+//criar uma struct com tres variaveis (dia mes ano)
+//depois, criar uma função.(avaliat todas as condiçoes de soma e subtração)
+//fazer o main
+
+typedef struct{
+    int dia;
+    int mes;
+    int ano;
+}data;
+
+int ehBissexto(long int n){
+    if(n % 4==0 && n % 100 !=0 ||  n % 400 ==0){
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+//vamos definir uma data inicial(poderia ser 0,0,0 tambem). 
+//1 -- a partir dessa data inicial, ver subtrair da dataBase
+//2-- a partitr da dana inicial, subtrair a data digitada
+//a partir dessas dessas contas, de inicial-database e inicial-data digitada, pegar o que sobrou e fazer a diferenca
+//diferença de database e datadigitada
+//aplicar as diferenças quando se tratar de ano bissexto(aumenta mais um dia)
+//quando se tratar de ano bissexto POREM ANTES DE FEVEREIRO, não adicionar mais um dia
+
+
+int calc(data d){
+
+    data ref = {1,1,1};
+    float total = 0; // float porque vai multiplicar por 365.25
+    
+    total += abs(ref.ano -1 -d.ano) * 365.25; //porque nossa data inicio começa no 1, tirar essa diferença com menos 1
+    
+    int meses[] = {31,28,31,30,31,30,31,31,30,31,30,31};
+
+    //como consideramos todos os meses dos anos na hora de multiplicar, mas nossa data base é
+    //17,9,2020
+    //temos que retirar os meses restantes, e depois adicionar esses dias que foram retirados
+
+    for(int mes = d.mes; mes <= 12;mes++){
+        
+        total -=meses[mes-1]; //tirar os dias de outubro novembro e dezembro
+    }
+
+    //adicionar os dias
+    total += (d.dia - ref.dia) +1;
+
+    //codigo para saber de é bissexto
+    //se a data dada, for bissexto, porem ainda nao chegou em fevereiro(ou ainda nao chegou em 29 de fevereiro), retira do total -1
+    if(ehBissexto(d.ano) && d.mes <=2)
+        
+        total--;
+
+    return total;
+
+}
+
+int main(){
+
+    data dataBase = {17,9,2020};
+    data dataDigitada;
+    char buffer[20];
+
+    while(fgets(buffer,20,stdin) !=NULL){
+        sscanf(buffer,"%d %d %d",&dataDigitada.dia,&dataDigitada.mes,&dataDigitada.ano);
+        printf("%d\n",abs(calc(dataBase) - calc(dataDigitada))+1);//somar um para contar com o dia atual '''como dito acima
+                                                                //ex:  10-1=9, porem, queremos contar com o atual(o dia de hoje) soma mais 1;
+    }
+  return 0;
+}

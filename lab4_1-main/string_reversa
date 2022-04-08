@@ -1,0 +1,20 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(){
+    
+char str[100];
+char str1[100];
+
+fgets(str,100,stdin);
+
+str[strlen(str)-1] = '\0';
+
+//usar o contador recebendo o valor total da string digitada, e decrescer ate o 0;
+for(int i = (strlen(str)-1); i >= 0; i-- ){
+   printf("%c",str[i]);
+}
+printf("\n");
+
+    return 0;
+}

@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <string.h>
+
+
+int main(){
+
+    char nome[20];
+
+    fgets(nome,20,stdin);
+    nome[strlen(nome)-1] = '\0';
+
+    FILE *f = fopen(nome,"rb");
+    long long int matriz[5][5];
+    long long int matriz1[5][5];
+    long long int soma[5][5];
+
+
+
+    for(int i=0; i<5; i++){
+        for(int j=0; j<5; j++){
+            fscanf(f,"%lld",&matriz[i][j]);
+        }
+    }
+    //fseek(f,4*sizeof(int),SEEK_CUR);
+
+    for(int i=0; i<5; i++){
+        for(int j=0; j<5; j++){
+            fscanf(f,"%lld",&matriz1[i][j]);
+        }
+    }
+
+    for(int i=0; i<5; i++){
+        for(int j=0; j<5; j++){
+            soma[i][j] = matriz[i][j] + matriz1[i][j];
+           }
+        }
+    
+    for(int i=0; i<5; i++){
+        for(int j=0; j<5; j++){
+            printf("%lld ",soma[i][j]);
+            if(j == 4){
+                printf("\n");
+            }
+           }
+        }
+    
+
+    return 0;
+}

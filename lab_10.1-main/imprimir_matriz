@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void libera_matriz(int *m,int l){
+    free(m);
+}
+
+int main(){
+    int *p = NULL;
+    int l,c;
+    scanf("%d\n",&l);
+    scanf("%d\n",&c);
+
+    p = (int *) malloc(l*c*sizeof(int));
+
+    for(int i=0; i < l; i++){
+        for(int j=0; j < c; j++){
+            scanf("%d", &p[i*c +j]);
+        }
+    }
+
+
+    for(int i=0; i < l; i++){
+        for(int j=0; j < c; j++){
+            printf("%d ", p[i*c +j]);
+        }
+        printf("\n");
+    }
+    libera_matriz(p,l);
+    //liberar memoria
+    //o processo de liberação de memoria deve ser feito na ordem inversa, já que se liberarmos as linhasd primeiro
+    //perderiamos os ponteiros para onde estão alocadas as colunas, sem poder libera-las.
+
+    return EXIT_SUCCESS;
+}

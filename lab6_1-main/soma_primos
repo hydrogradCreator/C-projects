@@ -1,0 +1,58 @@
+// criar um vetor de tamanho variavel que vai armazenando os valores primos, depois só percorrer o mesmo e exibir
+#include <stdio.h>
+
+// função que recebe um valor como parametro e retorna o valor dele em numeros primos
+    // possa ser que essa função retorne um vetor. * esqueçe vetor
+unsigned long long int primo(unsigned long long int x){
+    int validador = 0;
+
+    validador = 0;
+    
+    if(x == 2){
+        return x;
+    }
+    if(x > 2){
+        for (unsigned long long int i = 2; i <=x/2; i++){
+            if(x % i == 0){
+                validador ++;
+            }
+        }
+        if (validador == 0){
+            return x;
+        }
+        
+
+        return 0;
+    }
+}
+unsigned long long int soma_primos(unsigned long long int n){
+    unsigned long long int soma = 0, primu = 0;
+    for (unsigned long long int i = 0; i <= 100000000; i++){
+        if(primo(i+2) != 0){
+            soma += primo(i+2);
+            primu += 1;
+        }
+        if(primu == n){
+            break;
+        }
+    }
+    return soma;
+    
+}
+
+
+// função que vai receber a função de cima como parametro e vai realizar o somatorio
+
+
+int main(){
+
+    unsigned long long int entrada;
+    
+    while(scanf("%lld",&entrada) !=EOF){
+        printf("%lld\n", soma_primos(entrada));    
+    }
+
+    
+
+    return 0;
+}

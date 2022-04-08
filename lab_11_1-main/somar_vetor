@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int soma_matriz(int indice,int vetor[], int tam){
+    if(indice == tam-1){
+        return vetor[indice];
+    }
+    else{
+        return vetor[indice] + soma_matriz(indice+1, vetor,tam);
+    }
+}
+
+int main(){
+    int tam;
+
+    scanf("%d",&tam);
+
+    int *vet = (int *) malloc(tam*sizeof(int));
+
+    for(int i=0; i < tam; i++){
+        scanf("%d",&vet[i]);
+    }
+
+    int soma = soma_matriz(0,vet,tam);
+    printf("%d",soma);
+    
+    free(vet);
+
+    return 0;
+
+}

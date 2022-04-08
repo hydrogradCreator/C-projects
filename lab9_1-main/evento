@@ -1,0 +1,65 @@
+#include <stdio.h>
+
+struct Data_e{
+    int dia;
+    int mes;
+    int ano;
+};
+
+struct evento
+{
+    char evento[100];
+    char local[100];
+    struct Data_e data;
+};
+
+struct evento D[100];
+
+void escreve(struct evento eventos[], int n)
+{
+    
+    for (int i = 0; i < n; i++)
+    {
+        scanf("%s %s %d %d %d", eventos[i].evento, eventos[i].local, &D[i].data.dia, &D[i].data.mes, &D[i].data.ano);
+
+    }
+
+
+}
+
+void imprime(struct evento eventos[], int n, int dia, int mes, int ano)
+{
+    int valor = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if(dia == D[i].data.dia && mes == D[i].data.mes && ano == D[i].data.ano)
+        {
+            printf("%s %s ", eventos[i].evento, eventos[i].local);
+            printf("\n");
+            valor++;
+        }
+    }
+    if (valor == 0)
+    {
+            printf("Nenhum evento encontrado!");
+    }
+
+}
+
+int main()
+{
+    int n, dia_target, mes_target, ano_target;
+    //defini o tamanho do vetor
+    scanf("%d", &n);
+    // definir o tamanho da struct
+    struct evento eventos[n];
+
+    escreve(eventos, n);
+
+    scanf("%d %d %d", &dia_target, &mes_target, &ano_target);
+    printf("\n");
+    imprime(eventos, n, dia_target, mes_target, ano_target);
+
+    
+    return 0;
+}
